@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ES">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script>
+	//Vamos a trabajar con navegadores modernos, por tanto, y como se dijo en clase, omitimos los métodos alternativos ActiveXObject
+	httpRequest = new XMLHttpRequest();
+	//Indicamos que cuando se realice la carga del httpResquest, se ejecute la función de procesar la respuesta
+	httpRequest.onload = procesarRespuesta;
+	//Abrimos la petición, indicando el método, el fichero y si va a ser asíncrono o no
+	httpRequest.open('GET', 'alumnos.xml', true);
+	httpRequest.send(null);
+
+	//Funcion para procesar respuesta AJAX (Pág 16 de los apuntes de clase)
+	function procesarRespuesta() {
+        var elementos = httpRequest.responseXML;            
+        var item = procesarElemento(elementos);
+        document.body.appendChild(item);
+    }
+	//Función para procesar la tabla que generaremos con los datos
+	function procesarElemento(elementos) {
+		//Para hacer el código mas comprensible vamos a ir creando los elementos para posteriormente anexarlos a donde corresponda
+		//Generamos el elemento tabla
+		var table = document.createElement('table');
+		//Generamos el elemento fila (row)
+		var row=document.createElement('tr');
+		/*Generamos las 4 columnas que contiene nuestra tabla y modificamos su contenido con método textContent.
+		Inicialmente habíamos usado el método innerText, pero no es compatible con algunos navegadores.*/
+		var column1=document.createElement('th');
+		column1.textContent="Nombre";
+		var column2=document.createElement('th');
+		column2.textContent="Apellido";
+		var column3=document.createElement('th');
+		column3.textContent="Nota";
+		var column4=document.createElement('th');
+		column4.textContent="Convocatoria";
+		//Añadimos a la fila (row), las 4 columnas que lo componen como elementos hijos
+		row.appendChild(column1);
+		row.appendChild(column2);
+		row.appendChild(column3);
+		row.appendChild(column4);
+		//Añadimos a la tabla el elemento fila (row)
+		table.appendChild(row);
+		//Generamos una variable que almacena los elementos por nombre de httpRequest.responseXML
+		var alumnos = elementos.getElementsByTagName("alumno");
+		//Iteramos los elementos para crear los tr y td. Una vez creados, modificamos el contenido con textContent
+		for (var i = 0; i < alumnos.length; i++) {
+			var rows=document.createElement('tr');
+			var nombre=document.createElement('td');
+			var apellido=document.createElement('td');
+			var nota=document.createElement('td');
+			var convocatoria=document.createElement('td');
+			/* Hemos de tener en cuenta que el tratamiento que se hace de la respuesta XML es igual a lo que
+			se puede hacer en HTML (navegación por el DOM), por lo que es posible extraer la información de los atributos
+			con el método getAttribute (para el caso de la convocatoria) y del contenido textual con textContent  */
+			nombre.textContent = alumnos[i].getElementsByTagName("nombre")[0].childNodes[0].nodeValue;
+			apellido.textContent = alumnos[i].getElementsByTagName("apellido")[0].childNodes[0].nodeValue;
+			nota.textContent = alumnos[i].getElementsByTagName("nota")[0].childNodes[0].nodeValue;
+			convocatoria.textContent = alumnos[i].getElementsByTagName("nota")[0].getAttribute("convocatoria");
+			//Una vez generados los elementos, los añadimos donde corresponde (parecido a lo que hacíamos en JAVA AWT)
+			rows.appendChild(nombre);
+			rows.appendChild(apellido);
+			rows.appendChild(nota);
+			rows.appendChild(convocatoria);
+			table.appendChild(rows);
+		}
+		return table;
+	}
+	
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

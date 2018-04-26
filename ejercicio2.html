@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ES">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script>
+	//Vamos a trabajar con navegadores modernos, por tanto, y como se dijo en clase, omitimos los métodos alternativos ActiveXObject
+	httpRequest = new XMLHttpRequest();
+	//Indicamos que cuando se realice la carga del httpResquest, se ejecute la función de procesar la respuesta
+	httpRequest.onload = procesarRespuesta;
+	//Abrimos la petición, indicando el método, el fichero y si va a ser asíncrono o no
+	httpRequest.open('GET', 'alumnos.html', true);
+	//Como se indica en la práctica, debemos sobreescribir el tipo multimedia de la respuesta
+	httpRequest.overrideMimeType('text/html');
+	httpRequest.send(null);
+	
+	/*En los ejercicios de teoría, se adjuntaba un método para mostrar el progreso durante la carga, pero al no pedirse 
+	explícitamente en la práctica, hemos omitido ese fragmento de código*/
+	
+	//Función para procesar respuesta AJAX (Pág 14 de los apuntes de clase)
+	function procesarRespuesta() {
+		var respuesta = httpRequest.responseText;
+		var contenedor = document.createElement('div');
+		contenedor.innerHTML = respuesta;
+		document.body.appendChild(contenedor);
+	}
+	
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
